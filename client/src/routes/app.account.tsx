@@ -13,7 +13,7 @@ import type { Response, ResponseError } from "@/types/api";
 import { toast } from "sonner";
 import { FormSelect } from "@/components/auth/form-select";
 import { SelectItem } from "@/components/ui/select";
-import { LuUser2 } from "react-icons/lu";
+import { LuUser } from "react-icons/lu";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useDocumentTitle } from "@/hooks/document-title";
@@ -73,7 +73,7 @@ function ProfilePage() {
       <div className="grid grid-cols-7 place-items-center gap-y-6">
         <Avatar className="border-border col-span-full size-60 place-items-center self-start border md:col-span-3 lg:col-span-full xl:col-span-3 xl:size-80">
           <AvatarFallback>
-            <LuUser2 className="size-24 xl:size-40" />
+            <LuUser className="size-24 xl:size-40" />
           </AvatarFallback>
         </Avatar>
         <Form {...form}>

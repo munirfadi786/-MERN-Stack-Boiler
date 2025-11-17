@@ -35,7 +35,20 @@ app.use(morgan("common"));
 // Cors
 app.use(
   cors({
-    origin: [CLIENT_BASE_URL, "*"],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        CLIENT_BASE_URL,
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174"
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS Error: ${origin} not allowed`));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true
   })
 );
@@ -62,6 +75,9 @@ app.use("/", (req: Request, res: Response) => {
   }
 });
 
+// app.listen(port, () => {
+//   logger.info(`Server listening on port ${port}, url: http://localhost:${port}`);
+// });
 app.listen(port, () => {
   logger.info(`Server listening on port ${port}, url: http://localhost:${port}`);
 });

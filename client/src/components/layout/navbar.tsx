@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/services/user";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LuUser2 } from "react-icons/lu";
+import { LuUser } from "react-icons/lu";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth.store";
 import { logout } from "@/api/auth";
@@ -67,7 +67,7 @@ export const Navbar = (props: NavbarProps) => {
             >
               <Avatar className="border-border border">
                 <AvatarFallback>
-                  <LuUser2 className="size-5" />
+                  <LuUser className="size-5" />
                 </AvatarFallback>
               </Avatar>
               <p>{user?.name}</p>
@@ -80,7 +80,7 @@ export const Navbar = (props: NavbarProps) => {
               <DropdownMenuItem className="flex flex-col gap-y-2 py-4">
                 <Avatar className="border-border size-24 border">
                   <AvatarFallback>
-                    <LuUser2 className="size-12" />
+                    <LuUser className="size-12" />
                   </AvatarFallback>
                 </Avatar>
                 <div className="text-center">

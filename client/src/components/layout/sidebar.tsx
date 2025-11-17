@@ -35,12 +35,17 @@ export const Sidebar = (props: SidebarProps) => {
         </div>
         <ul className="flex flex-col gap-y-2 font-medium tracking-wide">
           <h3 className="mb-2 text-xs font-bold uppercase">Menu</h3>
-          <NavLink onClick={onClosed} to="/app" icon={IoGrid} activeOptions={{ exact: true }}>
-            Dashboard
-          </NavLink>
-          <NavLink onClick={onClosed} to="/app/account" icon={FaUserGear}>
-            Account
-          </NavLink>
+          <div onClick={onClosed}>
+            <NavLink to="/app" icon={IoGrid} activeOptions={{ exact: true }}>
+              Dashboard
+            </NavLink>
+          </div>
+
+          <div onClick={onClosed}>
+            <NavLink to="/app/account" icon={FaUserGear}>
+              Account
+            </NavLink>
+          </div>
         </ul>
       </div>
     </aside>
