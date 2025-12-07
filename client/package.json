@@ -6,7 +6,7 @@
   "description": "Client directory for MERN boilerplate",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "rm -rf ./dist && tsc && vite build",
     "preview": "vite preview"
   },

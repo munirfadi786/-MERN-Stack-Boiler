@@ -1,187 +1,75 @@
-# MERN Stack Boilerplate
+# 🚀 Scalable MERN Stack Deployment (IaC Showcase)
 
-This MERN Stack (MongoDB, Express, React, Node) Boilerplate project provides a solid foundation for kickstarting your full-stack web development endeavors.
+This repository demonstrates the automated provisioning and deployment of a full-stack **MERN (MongoDB, Express, React, Node.js) application** onto **Amazon Web Services (AWS)** using modern Infrastructure-as-Code (IaC) tools.
 
-## Table of Contents
+It merges a high-quality MERN boilerplate (based on [mern-boilerplate](https://github.com/zulmy-azhary/mern-boilerplate)) with a production-ready, highly available infrastructure setup.
 
-- [Introduction](#introduction)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
-  - [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Features](#features)
-- [Contributing](#contributing)
+## 🎯 Infrastructure Overview (IaC)
 
-## Introduction
+The infrastructure layer is built to ensure **scalability, high availability, and automated management**.
 
-This boilerplate is designed to streamline the development process for MERN stack applications. It includes a basic setup for the server and client sides, authentication, and common development tools.
+### Key Infrastructure Technologies
 
-## Getting Started
+| Tool/Technology | Use Case |
+| :--- | :--- |
+| **Terraform** | Provisioning core AWS resources: VPC components, Security Groups, IAM Roles, Auto Scaling Group (ASG), and an Application Load Balancer (ALB). |
+| **Ansible** | Configuration management, running OS-level setup, installing dependencies (Node, MongoDB client), and deploying the MERN application code. |
+| **AWS Auto Scaling** | Ensures application high availability and horizontal scaling; instances self-heal and automatically maintain a desired capacity. |
+| **AWS ALB** | Distributes incoming HTTP traffic across the EC2 instances in the ASG. |
+| **AWS CloudWatch** | Integrated for centralized logging and monitoring of EC2 instances. |
+
+---
+
+## ⚠️ CRITICAL SECURITY WARNING: Before You Run
+
+To use this code, you **MUST** replace all placeholder values with your own secure configurations. **Never commit private keys or active credentials.**
+
+### Essential Sanitization Steps
+
+1.  **Delete/Exclude State File:** Ensure the local **`terraform.tfstate`** file is deleted and excluded from version control (via `.gitignore`).
+2.  **Define SSH Key Path:** Update the `ssh_private_key_path` variable with the local path to **your own** private key file (`.pem`).
+3.  **Replace AWS IDs:** Replace the placeholder `default` values for `vpc_id` and `subnet_ids` in `variables.tf` with the specific IDs from **your AWS environment**.
+
+---
+
+## ⚙️ Infrastructure Setup and Deployment
 
 ### Prerequisites
 
-Make sure you have the following installed on your machine:
+* **AWS Account:** With credentials configured (via CLI, environment variables, or IAM role).
+* **Terraform:** Installed locally (version $>= 1.5.0$).
+* **Ansible:** Installed locally.
+* **SSH Key Pair:** An AWS EC2 Key Pair created in your target region.
 
-- Node.js: [Download Here](https://nodejs.org/)
-- npm: [Download Here](https://www.npmjs.com/)
+### 1. Configure Variables
 
-### Installation
+Create a `terraform.tfvars` file to define your environment-specific settings.
 
-1. Clone the repository :
+```hcl
+# 🔑 Replace with the name of the Key Pair created in your AWS region
+key_name               = "your-aws-key-name" 
 
-   ```bash
-   git clone https://github.com/zulmy-azhary/mern-boilerplate.git
-   ```
+# 🔑 Replace with the ABSOLUTE path to your local .pem file for Ansible SSH
+ssh_private_key_path   = "/home/user/.ssh/your-key-file.pem" 
 
-2. Change into the project directory :
-   
-   ```bash
-   cd mern-boilerplate
-   ```
+# 🌐 Replace with the specific IDs from your AWS account
+vpc_id                 = "vpc-xxxxxxxxxxxxxxxxx"
+subnet_ids             = [
+  "subnet-xxxxxxxxxxxxxxxxx",
+  "subnet-yyyyyyyyyyyyyyyyy",
+  # ... include all desired subnet IDs ...
+]
 
-3. Install dependencies for both client and server by running this following command :
-   
-   ```bash
-   npm run install-all
-   ```
 
-### Configuration
+# Initialize providers and modules
+terraform init
 
-1. Rename `.env.example` to `.env` and update the environment variables with your specific configuration.
+# Review the changes before applying
+terraform plan
 
-### Usage
+# Provision infrastructure and execute Ansible deployment
+terraform apply
 
-1. Start the development server :
-   
-   ```bash
-   npm run dev
-   ```
 
-2. Open your browser and navigate to http://localhost:5000 for server and http://localhost:5173 for client.
-
-## Project Structure
-The project follows a structured approach, separating the server and client components. Key directories include :
-
-* `/server` : Backend server using Express
-  * `/server/src/config` : Configuration files
-  * `/server/src/routes` : API routes
-  * `/server/src/controllers` : Request handlers / controllers
-  * `/server/src/libs` : Libraries and utilities
-  * `/server/src/models` : Data models
-  * `/server/src/schemas` : Data schemas
-  * `/server/src/services` : Data models' services
-  * `/server/src/middlewares` : Middleware handlers
-  * `/server/src/types` : Utility types for server environment
-
-* `/client` : Frontend ReactJS application
-  * `/client/src/api` : Request handlers for client
-  * `/client/src/components` : React components
-  * `/client/src/config` : Configuration files
-  * `/client/src/hooks` : Custom hooks
-  * `/client/src/lib` : Libraries and utilities
-  * `/client/src/routes` : Route pages
-  * `/client/src/schemas` : Form schemas' validations
-  * `/client/src/services` : Services for data fetching, mutation and manipulation
-  * `/client/src/store` : Zustand store's state management
-  * `/client/src/types` : Utility types for client environment
-
-You can see for the details of project structure below :
-```
-mern-boilerplate
-│
-├───.eslintrc.json
-├───.gitignore
-├───.prettierignore
-├───.prettierrc
-├───package.json
-├───README.md
-├───.husky
-│   └─── ...
-├───client
-│   ├───.env.example
-│   ├───.gitignore
-│   ├───package.json
-│   ├───components.json
-│   ├───index.html
-│   ├───tailwind.config.js
-│   ├───postcss.config.js
-│   ├───tsconfig.json
-│   ├───tsconfig.node.json
-│   ├───vercel.json
-│   ├───vite.config.ts
-│   ├───public
-│   │   └─── ...
-│   └───src
-│       ├───main.tsx
-│       ├───index.css
-│       ├───routeTree.gen.ts
-│       ├───vite-end.d.ts
-│       ├───api
-│       │   └─── ...
-│       ├───components
-│       │   ├───auth
-│       │   │   └─── ...
-│       │   ├───layout
-│       │   │   └─── ...
-│       │   └───ui
-│       │       └─── ...
-│       ├───config
-│       │   └─── ...
-│       ├───hooks
-│       │   └─── ...
-│       ├───lib
-│       │   └─── ...
-│       ├───routes
-│       │   └─── ...
-│       ├───schemas
-│       │   └─── ...
-│       ├───services
-│       │   └─── ...
-│       ├───store
-│       │   └─── ...
-│       └───types
-│           └─── ...
-└───server
-    ├───.env.example
-    ├───.gitignore
-    ├───nodemon.json
-    ├───package.json
-    ├───tsconfig.json
-    ├───vercel.json
-    └───src
-        ├───server.ts
-        ├───config
-        │   └─── ...
-        ├───controllers
-        │   └─── ...
-        ├───libs
-        │   └─── ...
-        ├───middlewares
-        │   └─── ...
-        ├───models
-        │   └─── ...
-        ├───routes
-        │   └─── ...
-        ├───schemas
-        │   └─── ...
-        ├───services
-        │   └─── ...
-        └───types
-            └─── ...
-```
-
-## Features
-
-* **Authentication**: User authentication using JWT tokens and HttpOnly Cookie.
-* **Update User Account**: User can update their account information.
-* **MongoDB Integration**: Utilizes MongoDB for data storage.
-* **Development Tools**: Includes `nodemon` for server auto-restart and `concurrently` for running server and client concurrently.
-* **Styling**: Basic styling setup with TailwindCSS and ShadCN UI.
-* **Formatting**: Prettier for code formatter.
-* **Linting**: Integrated ESLint for maintaining code quality.
-
-## Contributing
-
-Contributions are welcome! Feel free to create issues or submit pull requests to improve or add features.
+Outputs:
+alb_dns = "yourloadbalancer link"

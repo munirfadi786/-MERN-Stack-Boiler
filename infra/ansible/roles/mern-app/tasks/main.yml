@@ -1,0 +1,58 @@
+# - name: Ensure Docker is installed
+#   include_tasks: docker.yml
+
+# - name: Copy docker-compose.yml to server
+#   copy:
+#     src: docker-compose.yml
+#     dest: /home/ubuntu/mern-app/docker-compose.yml
+
+# - name: Pull Docker images and start containers
+#   command: docker-compose up -d
+#   args:
+#     chdir: /home/ubuntu/mern-app
+
+- name: Ensure Docker is installed
+  include_tasks: docker.yml
+
+- name: Create mern-app directory on remote
+  file:
+    path: /home/ubuntu/mern-app
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: "0755"
+
+- name: Copy docker-compose.yml to server
+  copy:
+    src: docker-compose.yml
+    dest: /home/ubuntu/mern-app/docker-compose.yml
+
+# --- New CloudWatch Agent Tasks ---
+- name: Download CloudWatch Agent package
+  become: yes
+  get_url:
+    url: https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+    dest: /tmp/amazon-cloudwatch-agent.deb
+
+- name: Install CloudWatch Agent
+  become: yes
+  apt:
+    deb: /tmp/amazon-cloudwatch-agent.deb
+
+- name: Copy CloudWatch Agent config
+  become: yes
+  copy:
+    src: cloudwatch-config.json
+    dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+
+- name: Start CloudWatch Agent
+  become: yes
+  command: >
+    /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl
+    -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -s
+
+# --- Continue Docker deployment ---
+- name: Pull Docker images and start containers
+  command: docker compose up -d
+  args:
+    chdir: /home/ubuntu/mern-app

@@ -1,0 +1,46 @@
+{
+  "agent": {
+    "metrics_collection_interval": 30,
+    "run_as_user": "root"
+  },
+  "metrics": {
+    "append_dimensions": {
+      "InstanceId": "${aws:InstanceId}"
+    },
+    "metrics_collected": {
+      "CPU": {
+        "measurement": ["cpu_usage_idle", "cpu_usage_iowait", "cpu_usage_user", "cpu_usage_system"],
+        "metrics_collection_interval": 60,
+        "resources": ["*"]
+      },
+      "Memory": {
+        "measurement": ["mem_used_percent"],
+        "metrics_collection_interval": 60
+      },
+      "Disk": {
+        "measurement": ["disk_used_percent"],
+        "metrics_collection_interval": 60,
+        "resources": ["/"]
+      },
+      "Docker": {
+        "measurement": ["cpu_usage", "memory_usage", "memory_limit", "network_rx_bytes", "network_tx_bytes"],
+        "metrics_collection_interval": 60,
+        "resources": ["*"]
+      }
+    }
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/home/ubuntu/mern-app/logs/*.log",
+            "log_group_name": "mern-app-logs",
+            "log_stream_name": "{instance_id}",
+            "retention_in_days": 7
+          }
+        ]
+      }
+    }
+  }
+}

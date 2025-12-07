@@ -1,0 +1,42 @@
+# ---
+# - name: Install CloudWatch Agent
+#   hosts: all
+#   become: yes
+
+#   tasks:
+#     - name: Download CloudWatch Agent RPM
+#       get_url:
+#         url: https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+#         dest: /tmp/amazon-cloudwatch-agent.rpm
+
+#     - name: Install CloudWatch Agent
+#       yum:
+#         name: /tmp/amazon-cloudwatch-agent.rpm
+#         state: present
+
+#     - name: Create CloudWatch agent configuration directory
+#       file:
+#         path: /opt/aws/amazon-cloudwatch-agent/etc
+#         state: directory
+
+#     - name: Create CloudWatch agent JSON config
+#       copy:
+#         dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+#         content: |
+#           {
+#             "metrics": {
+#               "metrics_collected": {
+#                 "cpu": { "measurement": ["cpu_usage_idle", "cpu_usage_iowait"] },
+#                 "mem": { "measurement": ["mem_used_percent"] },
+#                 "disk": { "measurement": ["disk_used_percent"], "resources": ["/"] },
+#                 "docker": {
+#                   "metrics_collection_interval": 60,
+#                   "resources": ["*"]
+#                 }
+#               },
+#               "aggregation_dimensions": [["InstanceId"]]
+#             }
+#           }
+
+#     - name: Start CloudWatch Agent
+#       command: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -s

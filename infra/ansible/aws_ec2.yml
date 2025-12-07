@@ -1,0 +1,8 @@
+plugin: amazon.aws.aws_ec2
+regions:
+  - us-east-1 # replace with your region
+filters:
+  "tag:Name": "mern-app-asg"
+keyed_groups:
+  - key: tags.Name
+    prefix: mern_servers

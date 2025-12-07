@@ -1,0 +1,20 @@
+# Use official Node image
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files first (for caching)
+COPY server/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy server source code
+COPY server/ ./
+
+# Expose server port
+EXPOSE 5000
+
+# Run server
+CMD ["npx", "ts-node", "src/server.ts"]

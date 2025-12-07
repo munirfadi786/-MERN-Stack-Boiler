@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  server:
+    image: /mern-server:latest
+    container_name: mern-server
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mern
+    depends_on:
+      - mongo
+    logging:
+      driver: "awslogs"
+      options:
+        awslogs-group: "mern-app-logs"
+        awslogs-region: "us-east-1"
+        awslogs-stream: "mern-server"
+
+  client:
+    image: munirfadi786/mern-client:latest
+    container_name: mern-client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+    logging:
+      driver: "awslogs"
+      options:
+        awslogs-group: "mern-app-logs"
+        awslogs-region: "us-east-1"
+        awslogs-stream: "mern-client"
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    logging:
+      driver: "awslogs"
+      options:
+        awslogs-group: "mern-app-logs"
+        awslogs-region: "us-east-1"
+        awslogs-stream: "mongo"
+
+volumes:
+  mongo_data:

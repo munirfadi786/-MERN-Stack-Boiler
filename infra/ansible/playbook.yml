@@ -1,0 +1,5 @@
+- name: Deploy MERN app on EC2
+  hosts: mern_servers_mern_app_asg
+  become: yes
+  roles:
+    - mern-app
